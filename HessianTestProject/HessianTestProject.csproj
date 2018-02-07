@@ -43,7 +43,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HessianConnection.cs" />
     <Compile Include="TestClasses\ObjectWithEnum.cs" />
+    <Compile Include="TestClasses\TestDto.cs" />
     <Compile Include="TestClasses\TestEnum.cs" />
     <Compile Include="TrashTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
