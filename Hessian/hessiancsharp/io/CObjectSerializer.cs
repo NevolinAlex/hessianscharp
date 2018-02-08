@@ -50,9 +50,9 @@ namespace hessiancsharp.io
 	{
 		#region CLASS_FIELDS
 		/// <summary>
-		/// Fields of the objectType
+		/// Propertys of the objectType
 		/// </summary>
-		private List<Object> m_alFields = new List<Object>();
+		private List<Object> m_alProperties = new List<Object>();
 		#endregion
 		#region CONSTRUCTORS
 		/// <summary>
@@ -64,19 +64,19 @@ namespace hessiancsharp.io
 		{
 			for (; type!=null; type = type.BaseType) 
 			{
-				FieldInfo [] fields = type.GetFields(BindingFlags.Public|
+				PropertyInfo [] properties = type.GetProperties(BindingFlags.Public|
 					BindingFlags.Instance|
 					BindingFlags.NonPublic|
-					BindingFlags.GetField |
+					BindingFlags.GetProperty |
 					BindingFlags.DeclaredOnly);
-				if (fields!=null) 
+				if (properties != null) 
 				{
-					for (int i = 0; i<fields.Length; i++)
+					for (int i = 0; i< properties.Length; i++)
 					{
-                        if ((fields[i].Attributes & FieldAttributes.NotSerialized) == 0)
-						    if (!this.m_alFields.Contains(fields[i])) 
+                        //if ((properties[i].Attributes & PropertyAttributes.NotSerialized) == 0)
+						    if (!this.m_alProperties.Contains(properties[i])) 
 						    {
-							    this.m_alFields.Add(fields[i]);
+							    this.m_alProperties.Add(properties[i]);
 						    }
 					}
 				}
@@ -101,19 +101,19 @@ namespace hessiancsharp.io
             if (customAttributes.Length > 0)
               typeName = ((CTypeNameAttribute)customAttributes[0]).Name;
             abstractHessianOutput.WriteMapBegin(typeName);
-            List<Object> serFields = GetSerializableFieldList();
-            for (int i = 0; i < serFields.Count; i++)
+            List<Object> serPropertys = GetSerializablePropertyList();
+            for (int i = 0; i < serPropertys.Count; i++)
             {
-                FieldInfo field = (FieldInfo)serFields[i];
-                abstractHessianOutput.WriteString(field.Name);
-                abstractHessianOutput.WriteObject(field.GetValue(obj));
+                PropertyInfo property = (PropertyInfo)serPropertys[i];
+                abstractHessianOutput.WriteString(property.Name);
+                abstractHessianOutput.WriteObject(property.GetValue(obj, null));
             }
             abstractHessianOutput.WriteMapEnd();
         }
 
-        public virtual List<Object> GetSerializableFieldList()
+        public virtual List<Object> GetSerializablePropertyList()
         {
-            return m_alFields;
+            return m_alProperties;
         }
 
 

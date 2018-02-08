@@ -9,26 +9,26 @@ namespace hessiancsharp.io
 	/// </summary>
 	public class CExceptionDeserializer : CObjectDeserializer
 	{
-		private IDictionary m_deserFields = new Dictionary<Object, Object>();
+		private IDictionary m_deserPropertys = new Dictionary<Object, Object>();
 		private Type m_type = null;
 		public CExceptionDeserializer(Type type):base(type)
 		{
-			List<Object> fieldList = CExceptionSerializer.GetSerializableFields();
-			foreach (FieldInfo fieldInfo in fieldList)
+			List<Object> propertyList = CExceptionSerializer.GetSerializablePropertys();
+			foreach (PropertyInfo propertyInfo in propertyList)
 			{
-				m_deserFields[fieldInfo.Name] = fieldInfo;
+				m_deserPropertys[propertyInfo.Name] = propertyInfo;
 			}
 			m_type = type;
 		}
 
-		public override IDictionary GetDeserializableFields()
+		public override IDictionary GetDeserializablePropertys()
 		{
-			return m_deserFields;
+			return m_deserPropertys;
 		}
 
 		public override object ReadMap(AbstractHessianInput abstractHessianInput)
 		{
-			Dictionary<Object, Object> fieldValueMap = new Dictionary<Object, Object>();
+			Dictionary<Object, Object> propertyValueMap = new Dictionary<Object, Object>();
 			string _message = null;
 			Exception _innerException = null;
 			while (! abstractHessianInput.IsEnd()) 
@@ -36,13 +36,13 @@ namespace hessiancsharp.io
 				object objKey = abstractHessianInput.ReadObject();
 				if(objKey != null)
 				{
-					IDictionary deserFields = GetDeserializableFields();
-                    FieldInfo field = (FieldInfo) deserFields[objKey];
+					IDictionary deserPropertys = GetDeserializablePropertys();
+                    PropertyInfo property = (PropertyInfo) deserPropertys[objKey];
                     // try to convert a Java Exception in a .NET exception
 					if(objKey.ToString() == "_message" || objKey.ToString() == "detailMessage")
 					{
-                        if (field != null)
-						    _message = abstractHessianInput.ReadObject(field.FieldType) as string;
+                        if (property != null)
+						    _message = abstractHessianInput.ReadObject(property.PropertyType) as string;
                         else
                             _message = abstractHessianInput.ReadObject().ToString();
 					}
@@ -50,8 +50,8 @@ namespace hessiancsharp.io
 					{
                         try
                         {
-                            if (field != null)
-                                _innerException = abstractHessianInput.ReadObject(field.FieldType) as Exception;
+                            if (property != null)
+                                _innerException = abstractHessianInput.ReadObject(property.PropertyType) as Exception;
                             else
                                 _innerException = abstractHessianInput.ReadObject(typeof(Exception)) as Exception;
                         }
@@ -64,14 +64,14 @@ namespace hessiancsharp.io
                     }
 					else
 					{
-                        if (field != null)
+                        if (property != null)
                         {
-                            object objFieldValue = abstractHessianInput.ReadObject(field.FieldType);
-                            fieldValueMap.Add(field, objFieldValue);
+                            object objPropertyValue = abstractHessianInput.ReadObject(property.PropertyType);
+                            propertyValueMap.Add(property, objPropertyValue);
                         } else
                             // ignore (z. B. Exception Stacktrace "stackTrace" von Java)
                             abstractHessianInput.ReadObject();
-						//field.SetValue(result, objFieldValue);
+						//property.SetValue(result, objPropertyValue);
 					}
 				}
 				
@@ -113,11 +113,11 @@ namespace hessiancsharp.io
 			{
 				result = new Exception(_message, _innerException);
 			}
-			foreach (KeyValuePair<object, object> entry in fieldValueMap)
+			foreach (KeyValuePair<object, object> entry in propertyValueMap)
 			{
-				FieldInfo fieldInfo = (FieldInfo) entry.Key;
+				PropertyInfo propertyInfo = (PropertyInfo) entry.Key;
 				object value = entry.Value;
-				try {fieldInfo.SetValue(result, value);} catch(Exception){}
+				try {propertyInfo.SetValue(result, value, null);} catch(Exception){}
 			}
 
             // besser spät als gar nicht.

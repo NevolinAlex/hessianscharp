@@ -6,37 +6,37 @@ namespace hessiancsharp.io
 {
 	public class CExceptionSerializer : CObjectSerializer
 	{
-		private List<Object> m_serFields = new List<Object>();
+		private List<Object> m_serPropertys = new List<Object>();
 		public CExceptionSerializer():base(typeof(Exception))
 		{
-			m_serFields = GetSerializableFields();
+			m_serPropertys = GetSerializablePropertys();
 		}
 
-		public static List<Object> GetSerializableFields()
+		public static List<Object> GetSerializablePropertys()
 		{
 			Type type = typeof(Exception);
-			List<Object> serFields = new List<Object>();
-			FieldInfo [] fields = type.GetFields(BindingFlags.Public|
+			List<Object> serPropertys = new List<Object>();
+			PropertyInfo [] propertys = type.GetProperties(BindingFlags.Public|
 												BindingFlags.Instance|
 												BindingFlags.NonPublic|
-												BindingFlags.GetField |
+												BindingFlags.GetProperty |
 												BindingFlags.DeclaredOnly);
-			if (fields!=null) 
+			if (propertys!=null) 
 			{
-				for (int i = 0; i<fields.Length; i++)
+				for (int i = 0; i<propertys.Length; i++)
 				{
-					if ((!serFields.Contains(fields[i]))   && (fields[i].FieldType != typeof(System.IntPtr)))
+					if ((!serPropertys.Contains(propertys[i]))   && (propertys[i].PropertyType != typeof(System.IntPtr)))
 					{
-						serFields.Add(fields[i]);
+						serPropertys.Add(propertys[i]);
 					}
 				}
 			}
-			return serFields;
+			return serPropertys;
 		}
 
-		public override List<Object> GetSerializableFieldList()
+		public override List<Object> GetSerializablePropertyList()
 		{
-			return m_serFields;
+			return m_serPropertys;
 		}
 
 	}

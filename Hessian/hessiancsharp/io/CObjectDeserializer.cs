@@ -29,8 +29,8 @@
 ******************************************************************************************************
 * Last change: 2005-12-16
 * By Dimitri Minich
-* 2005-12-16: GetDeserializableFields added
-* 2006-01-03: BUGFIX Non-existing fields by mw
+* 2005-12-16: GetDeserializablePropertys added
+* 2006-01-03: BUGFIX Non-existing propertys by mw
 ******************************************************************************************************
 */
 
@@ -55,9 +55,9 @@ namespace hessiancsharp.io
 		/// </summary>
 		private Type m_type;
 		/// <summary>
-		/// Hashmap with class fields (&lt;field name&gt;&lt;field info instance&gt;)
+		/// Hashmap with class propertys (&lt;property name&gt;&lt;property info instance&gt;)
 		/// </summary>
-		private Dictionary<Object, Object> m_htFields = new Dictionary<Object, Object>();
+		private Dictionary<Object, Object> m_htPropertys = new Dictionary<Object, Object>();
 		#endregion
 		#region CONSTRUCTORS
 		/// <summary>
@@ -70,17 +70,17 @@ namespace hessiancsharp.io
 			this.m_type = type;
 			for (; type!=null; type = type.BaseType) 
 			{
-				FieldInfo [] fields = type.GetFields(
+				PropertyInfo [] properties = type.GetProperties(
 					BindingFlags.Public|
 					BindingFlags.Instance|
 					BindingFlags.NonPublic|
-					BindingFlags.GetField |
+					BindingFlags.GetProperty |
 					BindingFlags.DeclaredOnly);
-				if (fields!=null) 
+				if (properties != null) 
 				{
-					for (int i = 0; i<fields.Length; i++)
+					for (int i = 0; i< properties.Length; i++)
 					{
-						this.m_htFields.Add(fields[i].Name, fields[i]);
+						this.m_htPropertys.Add(properties[i].Name, properties[i]);
 					}
 				}
 			}
@@ -136,15 +136,15 @@ namespace hessiancsharp.io
 			while (! abstractHessianInput.IsEnd()) 
 			{
 				object objKey = abstractHessianInput.ReadObject();
-                IDictionary deserFields = GetDeserializableFields();
-				FieldInfo field = null;
-                field = (FieldInfo)deserFields[objKey];
+                IDictionary deserPropertys = GetDeserializablePropertys();
+				PropertyInfo property = null;
+                property = (PropertyInfo)deserPropertys[objKey];
                 
 
-                if (field != null)
+                if (property != null)
                 {
-                    object objFieldValue = abstractHessianInput.ReadObject(field.FieldType);
-                    field.SetValue(result, objFieldValue);
+                    object objPropertyValue = abstractHessianInput.ReadObject(property.PropertyType);
+                    property.SetValue(result, objPropertyValue, null);
                 }
                 else
                 {
@@ -157,9 +157,9 @@ namespace hessiancsharp.io
 			return result;
 		}
 
-        public virtual IDictionary GetDeserializableFields()
+        public virtual IDictionary GetDeserializablePropertys()
         {
-            return m_htFields;
+            return m_htPropertys;
         }
 
 		#endregion

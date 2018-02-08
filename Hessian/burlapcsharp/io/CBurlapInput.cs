@@ -1732,7 +1732,7 @@ namespace burlapcsharp.io
   
            private static HashMap _tagMap;
 
-  private static Field _detailMessageField;
+  private static Property _detailMessageProperty;
   
   protected SerializerFactory _serializerFactory;
   

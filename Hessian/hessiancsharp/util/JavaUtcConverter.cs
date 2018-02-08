@@ -143,17 +143,17 @@ namespace hessiancsharp.util
          * This array describes transitions of GMT offsets of this time
          * zone, including both raw offset changes and daylight saving
          * time changes.
-         * A long integer consists of four bit fields.
+         * A long integer consists of four bit propertys.
          * <ul>
-         * <li>The most significant 52-bit field represents transition
+         * <li>The most significant 52-bit property represents transition
          * time in milliseconds from Gregorian January 1 1970, 00:00:00
          * GMT.</li>
-         * <li>The next 4-bit field is reserved and must be 0.</li>
-         * <li>The next 4-bit field is an index value to {@link #offsets
+         * <li>The next 4-bit property is reserved and must be 0.</li>
+         * <li>The next 4-bit property is an index value to {@link #offsets
          * offsets[]} for the amount of daylight saving at the
          * transition. If this value is zero, it means that no daylight
          * saving, not the index value zero.</li>
-         * <li>The least significant 4-bit field is an index value to
+         * <li>The least significant 4-bit property is an index value to
          * {@link #offsets offsets[]} for <em>total</em> GMT offset at the
          * transition.</li>
          * </ul>
