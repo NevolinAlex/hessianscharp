@@ -9,32 +9,29 @@ namespace NTransit.Business.Java.Service.dto
 	[Serializable]
 	public class TestDto
 	{
-		private object result;
 		private decimal? testDouble;
 
-		public object Result
-		{
-			get => result;
-			set => this.result = value;
-		}
-
-		public decimal? TestDouble
-		{
-			get => testDouble;
-			set => this.testDouble = value;
-		}
+		public decimal? TestDouble { get; set; }
 
 		private TestEnum testEnum;
 
-		public TestEnum TestEnum
-		{
-			get => testEnum;
-			set => this.testEnum = value;
-		}
+		public TestEnum TestEnum { get; set; }
 
 		public TestDto()
 		{
-			testEnum = TestEnum.enumerating;
+			//testEnum = TestEnum.nope;
+			//TestEnum = TestEnum.yes;
+			//testDouble = 0;
+			//TestDouble = 1;
+		}
+
+		public void SetTestEnum(TestEnum enumValue)
+		{
+			testEnum = enumValue;
+		}
+		public void SetTestDouble(TestEnum enumValue)
+		{
+			testEnum = enumValue;
 		}
 	}
 
@@ -42,6 +39,8 @@ namespace NTransit.Business.Java.Service.dto
 	{
 		enumerating,
 		testing,
-		cases
+		cases,
+		nope,
+		yes
 	}
 }

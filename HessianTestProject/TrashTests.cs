@@ -8,6 +8,7 @@ using hessiancsharp.io;
 using HessianTestProject.TestClasses;
 using NTransit.Business.Java.Service.dto;
 using NUnit.Framework;
+using TestEnum = NTransit.Business.Java.Service.dto.TestEnum;
 
 namespace HessianTestProject
 {
@@ -20,7 +21,7 @@ namespace HessianTestProject
 			MemoryStream stream = new MemoryStream();
 			CHessianOutput out1 = new CHessianOutput(stream);
 
-			ObjectWithEnum obj = new ObjectWithEnum();
+			TestDto obj = new TestDto();
 
 			out1.StartReply();
 			out1.WriteObject(obj);
@@ -29,7 +30,7 @@ namespace HessianTestProject
 
 			File.WriteAllBytes(@"C:\Users\disap\Desktop\Projects\hessianscharp\HessianTestProject\test.txt", data);
 			CHessianInput input = new CHessianInput(new MemoryStream(data));
-			var result = input.ReadReply(typeof(ObjectWithEnum));
+			var result = input.ReadReply(typeof(TestDto));
 			Assert.IsTrue(true);
 		}
 		[SetUp]
@@ -40,7 +41,11 @@ namespace HessianTestProject
 		[Test]
 		public void TestGettingObject()
 		{
-			object obj = _hessianController.getObjectCopy(new TestDto());
+			var dto = new TestDto();
+			dto.TestEnum = TestEnum.yes;
+			dto.TestDouble = 1;
+
+			object obj = _hessianController.getObjectCopy(dto);
 		}
 	}
 }
