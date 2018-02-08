@@ -56,6 +56,16 @@ namespace hessiancsharp.io
 	{
 		#region CLASS_FIELDS
 		/// <summary>
+		/// Deserializer Map which user fill (own types)
+		/// </summary>
+		public static Dictionary<Object, Object> UserDeserializerMap = new Dictionary<object, object>();
+
+		/// <summary>
+		/// Seserializer Map which user fill (own types)
+		/// </summary>
+		public static Dictionary<Object, Object> UserSerializerMap = new Dictionary<object, object>();
+
+		/// <summary>
 		/// Map with deserializers
 		/// </summary>
 		private static Dictionary<Object, Object> m_htDeserializerMap = null;
@@ -147,8 +157,16 @@ namespace hessiancsharp.io
 
             m_htDeserializerMap.Add(typeof(System.Decimal), new CDecimalDeserializer());
 
+			foreach (var pair in UserDeserializerMap)
+			{
+				m_htDeserializerMap.Add(pair.Key, pair.Value);
+			}
 
-			
+			foreach (var pair in UserSerializerMap)
+			{
+				m_htSerializerMap.Add(pair.Key, pair.Value);
+			}
+
 			m_htSerializerMap.Add(typeof (System.IO.FileInfo), new CStringValueSerializer());
 			m_htDeserializerMap.Add(typeof (System.IO.FileInfo),
 				new CStringValueDeserializer(typeof (System.IO.FileInfo)));
