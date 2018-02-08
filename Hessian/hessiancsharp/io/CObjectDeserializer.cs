@@ -144,7 +144,14 @@ namespace hessiancsharp.io
                 if (property != null)
                 {
                     object objPropertyValue = abstractHessianInput.ReadObject(property.PropertyType);
-                    property.SetValue(result, objPropertyValue, null);
+	                try
+	                {
+		                property.SetValue(result, objPropertyValue, null);
+					}
+	                catch (ArgumentException)
+	                {
+	                }
+
                 }
                 else
                 {

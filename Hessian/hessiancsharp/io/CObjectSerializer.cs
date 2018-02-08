@@ -37,6 +37,8 @@
 using System;
 using System.Collections; using System.Collections.Generic;
 using System.Reflection;
+using System.Xml.Serialization;
+
 #endregion
 
 namespace hessiancsharp.io
@@ -73,7 +75,8 @@ namespace hessiancsharp.io
 				{
 					for (int i = 0; i< properties.Length; i++)
 					{
-                        //if ((properties[i].Attributes & PropertyAttributes.NotSerialized) == 0)
+						//if ((properties[i].Attributes & PropertyAttributes.NotSerialized) == 0)
+						if (!Attribute.IsDefined(properties[i], typeof(XmlIgnoreAttribute)))
 						    if (!this.m_alProperties.Contains(properties[i])) 
 						    {
 							    this.m_alProperties.Add(properties[i]);
