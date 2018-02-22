@@ -30,12 +30,12 @@ namespace hessiancsharp.io
 		}
 		public override object ReadObject(AbstractHessianInput abstractHessianInput)
 		{
-			String strInitValue = abstractHessianInput.ReadString();
+			double strInitValue = abstractHessianInput.ReadDouble();
 
 			//if (strInitValue == null)
 			//	throw new IOException("No value found for decimal.");
 
-			return Decimal.Parse(strInitValue);
+			return Convert.ToDecimal(strInitValue);
 		}
 	}
 }

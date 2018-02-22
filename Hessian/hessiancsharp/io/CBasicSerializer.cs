@@ -88,6 +88,8 @@ namespace hessiancsharp.io
 					abstractHessianOutput.WriteLong((long) obj);
 					break;
 				case FLOAT:
+				case DECIMAL:
+				case NULL_DECIMAL:
 					abstractHessianOutput.WriteDouble(Convert.ToDouble(obj));
 					break;
 				case DOUBLE:

@@ -78,6 +78,8 @@ namespace hessiancsharp.io
 					return abstractHessianInput.ReadLong();
 				case DOUBLE:
 					return abstractHessianInput.ReadDouble();
+				case DECIMAL:
+					return Convert.ToDecimal(abstractHessianInput.ReadDouble());
 				case STRING:
 					return abstractHessianInput.ReadString();
 				case CHARACTER:
