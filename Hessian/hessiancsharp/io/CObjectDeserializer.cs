@@ -35,9 +35,13 @@
 */
 
 #region NAMESPACES
+
 using System;
-using System.Collections; using System.Collections.Generic;
+using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
+using System.Xml.Serialization;
+
 #endregion
 
 namespace hessiancsharp.io
@@ -50,16 +54,21 @@ namespace hessiancsharp.io
 	public class CObjectDeserializer : AbstractDeserializer
 	{
 		#region CLASS_FIELDS
+
 		/// <summary>
 		/// Object type
 		/// </summary>
 		private Type m_type;
+
 		/// <summary>
 		/// Hashmap with class propertys (&lt;property name&gt;&lt;property info instance&gt;)
 		/// </summary>
 		private Dictionary<Object, Object> m_htPropertys = new Dictionary<Object, Object>();
+
 		#endregion
+
 		#region CONSTRUCTORS
+
 		/// <summary>
 		/// Constructor
 		/// </summary>
@@ -68,29 +77,34 @@ namespace hessiancsharp.io
 		public CObjectDeserializer(Type type)
 		{
 			this.m_type = type;
-			for (; type!=null; type = type.BaseType) 
+			for (; type != null; type = type.BaseType)
 			{
-				PropertyInfo [] properties = type.GetProperties(
-					BindingFlags.Public|
-					BindingFlags.Instance|
-					BindingFlags.NonPublic|
+				PropertyInfo[] properties = type.GetProperties(
+					BindingFlags.Public |
+					BindingFlags.Instance |
+					BindingFlags.NonPublic |
 					BindingFlags.GetProperty |
 					BindingFlags.DeclaredOnly);
-				if (properties != null) 
+				if (properties != null)
 				{
-					for (int i = 0; i< properties.Length; i++)
+					for (int i = 0; i < properties.Length; i++)
 					{
-						this.m_htPropertys.Add(properties[i].Name, properties[i]);
+						if (!Attribute.IsDefined(properties[i], typeof(XmlIgnoreAttribute)))
+							this.m_htPropertys.Add(properties[i].Name, properties[i]);
 					}
 				}
 			}
 		}
+
 		#endregion
+
 		#region PUBLIC_METHODS
 
-		public override Type GetOwnType() {
+		public override Type GetOwnType()
+		{
 			return m_type;
 		}
+
 		/// <summary>
 		/// Reads object as map
 		/// </summary>
@@ -98,28 +112,33 @@ namespace hessiancsharp.io
 		/// <returns>Read object or null</returns>
 		public override object ReadObject(AbstractHessianInput abstractHessianInput)
 		{
-			return this.ReadMap( abstractHessianInput );
+			return this.ReadMap(abstractHessianInput);
 		}
 
-        /// <summary>
-        /// Reads map
-        /// </summary>
-        /// <param name="abstractHessianInput">HessianInput to read from</param>
-        /// <returns>Read object or null</returns>
-        public override object ReadMap(AbstractHessianInput abstractHessianInput)
-        {
-            #if COMPACT_FRAMEWORK
+		/// <summary>
+		/// Reads map
+		/// </summary>
+		/// <param name="abstractHessianInput">HessianInput to read from</param>
+		/// <returns>Read object or null</returns>
+		public override object ReadMap(AbstractHessianInput abstractHessianInput)
+		{
+#if COMPACT_FRAMEWORK
             object result = Activator.CreateInstance(this.m_type);				
             #else
-            object result = Activator.CreateInstance(this.m_type.Assembly.FullName, this.m_type.FullName).Unwrap();
-            //			object result = Activator.CreateInstance(this.m_type);
-            //			object result = null;
-            #endif
+			object result = Activator.CreateInstance(this.m_type.Assembly.FullName, this.m_type.FullName).Unwrap();
+			//			object result = Activator.CreateInstance(this.m_type);
+			//			object result = null;
+#endif
 
-
-            return ReadMap(abstractHessianInput, result);
-   
-        }
+			try
+			{
+				return ReadMap(abstractHessianInput, result);
+			}
+			catch (Exception e)
+			{
+				throw;
+			}
+		}
 
 
 		/// <summary>
@@ -127,47 +146,49 @@ namespace hessiancsharp.io
 		/// </summary>
 		/// <param name="abstractHessianInput">HessianInput to read from</param>
 		/// <returns>Read object or null</returns>
-        public object ReadMap(AbstractHessianInput abstractHessianInput, Object result)
-        {
+		public object ReadMap(AbstractHessianInput abstractHessianInput, Object result)
+		{
+			int refer = abstractHessianInput.AddRef(result);
 
-            
-            int refer = abstractHessianInput.AddRef(result);
-
-			while (! abstractHessianInput.IsEnd()) 
+			while (!abstractHessianInput.IsEnd())
 			{
 				object objKey = abstractHessianInput.ReadObject();
-                IDictionary deserPropertys = GetDeserializablePropertys();
+				IDictionary deserPropertys = GetDeserializablePropertys();
 				PropertyInfo property = null;
-                property = (PropertyInfo)deserPropertys[objKey];
-                
+				property = (PropertyInfo) deserPropertys[objKey];
 
-                if (property != null)
-                {
-                    object objPropertyValue = abstractHessianInput.ReadObject(property.PropertyType);
-	                try
-	                {
-		                property.SetValue(result, objPropertyValue, null);
+
+				if (property != null)
+				{
+					if (property.PropertyType == typeof(System.Decimal))
+					{
+						int a = 10;
 					}
-	                catch (ArgumentException)
-	                {
-	                }
+					object objPropertyValue = abstractHessianInput.ReadObject(property.PropertyType);
+					try
+					{
 
-                }
-                else
-                {
-                    // mw BUGFIX!!!
-                    object ignoreme = abstractHessianInput.ReadObject();
-                }
-                
-            }
+						property.SetValue(result, objPropertyValue, null);
+					}
+					catch (Exception e)
+					{
+					}
+
+				}
+				else
+				{
+					// mw BUGFIX!!!
+					object ignoreme = abstractHessianInput.ReadObject();
+				}
+			}
 			abstractHessianInput.ReadEnd();
 			return result;
 		}
 
-        public virtual IDictionary GetDeserializablePropertys()
-        {
-            return m_htPropertys;
-        }
+		public virtual IDictionary GetDeserializablePropertys()
+		{
+			return m_htPropertys;
+		}
 
 		#endregion
 	}

@@ -55,11 +55,12 @@ namespace hessiancsharp.io
                             else
                                 _innerException = abstractHessianInput.ReadObject(typeof(Exception)) as Exception;
                         }
-                        catch (Exception)
+                        catch (Exception e)
                         {
-                            // als Cause ist bei Java gerne mal eine zirkuläre Referenz auf die Exception selbst
-                            // angegeben. Das klappt nicht, weil die Referenz noch nicht registriert ist,
-                            // weil der Typ noch nicht klar ist (s.u.)
+	                        throw e;
+	                        // als Cause ist bei Java gerne mal eine zirkuläre Referenz auf die Exception selbst
+	                        // angegeben. Das klappt nicht, weil die Referenz noch nicht registriert ist,
+	                        // weil der Typ noch nicht klar ist (s.u.)
                         }
                     }
 					else

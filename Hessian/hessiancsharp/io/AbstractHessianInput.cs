@@ -34,18 +34,22 @@
 */
 
 #region NAMESPACES
+
 using System;
 using System.IO;
 
 #endregion
-namespace hessiancsharp.io 
+
+namespace hessiancsharp.io
 {
 	/// <summary>
 	/// Parent of the HessianInput class.
 	/// Declares read operations (access methods) from an InputStream.
 	/// </summary>
-	public abstract class AbstractHessianInput : CHessianProtocolConstants  {
+	public abstract class AbstractHessianInput : CHessianProtocolConstants
+	{
 		#region CLASS_FIELDS
+
 		// serializer factory
 		protected CSerializerFactory m_serializerFactory = null;
 
@@ -55,7 +59,7 @@ namespace hessiancsharp.io
 		protected String m_strMethod;
 
 		#endregion
-		
+
 		#region PROPERTIES
 
 		/// <summary> 
@@ -75,9 +79,11 @@ namespace hessiancsharp.io
 		{
 			set { m_serializerFactory = value; }
 		}
+
 		#endregion
-		
+
 		#region PUBLIC_METHODS
+
 		/// <summary>
 		/// Reads an arbitrary object from the input stream.
 		/// </summary>
@@ -90,6 +96,7 @@ namespace hessiancsharp.io
 		/// </summary>
 		/// <returns>Object value</returns>
 		public abstract object ReadObject();
+
 		/// <summary>
 		/// Reads a reply as an object.
 		/// If the reply has a fault, throws the exception.
@@ -97,6 +104,7 @@ namespace hessiancsharp.io
 		/// <param name="expectedType"> Expected class of the value</param>
 		/// <returns>Reply value</returns>
 		public abstract Object ReadReply(Type expectedType);
+
 		/// <summary>
 		/// Reads an integer
 		/// 
@@ -106,7 +114,7 @@ namespace hessiancsharp.io
 		/// </summary>
 		/// <returns></returns>
 		public abstract int ReadInt();
-				
+
 		/// <summary>
 		/// Reads a boolean
 		/// 
@@ -117,7 +125,7 @@ namespace hessiancsharp.io
 		/// </summary>
 		/// <returns>boolean value</returns>
 		public abstract bool ReadBoolean();
-		
+
 		/// <summary>
 		/// Reads a string encoded in UTF-8
 		/// 
@@ -128,7 +136,7 @@ namespace hessiancsharp.io
 		/// </summary>
 		/// <returns>string encoded in UTF-8</returns>
 		public abstract string ReadString();
-		
+
 		/// <summary>
 		/// Reads a long
 		/// <code>
@@ -137,7 +145,7 @@ namespace hessiancsharp.io
 		/// </summary>
 		/// <returns>long value</returns>
 		public abstract long ReadLong();
-		
+
 		/// <summary>
 		/// Reads a double.
 		/// <code>
@@ -195,38 +203,45 @@ namespace hessiancsharp.io
 		/// b b16 b8 non-final binary chunk
 		/// B b16 b8 final binary chunk
 		/// <returns>Byte array</returns>
-		public abstract byte []ReadBytes();
+		public abstract byte[] ReadBytes();
+
 		///<summary>
 		/// Reads the start of a list.
 		///</summary>
 		///<returns>Code for the map start</returns>
 		public abstract int ReadMapStart();
+
 		///<summary>
 		/// Reads the end of a list.
 		///</summary>
-		public abstract void  ReadMapEnd();
+		public abstract void ReadMapEnd();
+
 		/// <summary>
 		/// Reads utc date
 		/// </summary>
 		/// <returns>Read date as miliseconds since the epoche</returns>
 		public abstract long ReadUTCDate();
+
 		/// <summary>
 		/// Reads a reference.
 		/// </summary>
 		/// <returns>reference object</returns>
 		public abstract object ReadRef();
+
 		/// <summary>
 		/// Reads a InputStream.
 		/// </summary>
 		/// <returns>stream</returns>
 		public abstract Stream ReadInputStream();
+
 		/// <summary>
 		/// Starts reading the reply
 		/// A successful completion will have a single value:
 		/// r
 		/// </summary>
 		/// <exception cref="CHessianException"/>
-		public abstract void StartReply();		
+		public abstract void StartReply();
+
 		/// <summary>
 		/// Completes reading the call
 		/// A successful completion will have a single value:
@@ -234,6 +249,7 @@ namespace hessiancsharp.io
 		/// </summary>
 		/// <exception cref="CHessianException"/>
 		public abstract void CompleteReply();
+
 		/// <summary>
 		/// Starts reading the call
 		/// A successful completion will have a single value:
@@ -241,7 +257,7 @@ namespace hessiancsharp.io
 		/// m b16 b8 method
 		/// </summary>		
 		public abstract void StartCall();
-		
+
 		/// <summary>
 		/// Completes reading the call
 		/// A successful completion will have a single value:

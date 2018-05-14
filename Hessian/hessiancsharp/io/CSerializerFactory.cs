@@ -138,6 +138,8 @@ namespace hessiancsharp.io
 			addBasic(typeof (long), "long", CSerializationConstants.LONG);
 			addBasic(typeof (float), "float", CSerializationConstants.FLOAT);
 			addBasic(typeof (bool), "bool", CSerializationConstants.BOOLEAN);
+			addBasic(typeof (decimal), "System.Decimal", CSerializationConstants.DECIMAL);
+			//addBasic(typeof (decimal?), "decimal?", CSerializationConstants.NULL_DECIMAL);
 
 			addBasic(typeof (bool[]), "[bool", CSerializationConstants.BOOLEAN_ARRAY);
 			addBasic(typeof (byte[]), "[byte", CSerializationConstants.BYTE_ARRAY);
@@ -153,9 +155,12 @@ namespace hessiancsharp.io
 			//addBasic(typeof(Object[]), "[object", BasicSerializer.OBJECT_ARRAY);
 			m_htCachedDeserializerMap = new Dictionary<Object, Object>();
 			m_htCachedSerializerMap = new Dictionary<Object, Object>();
-            m_htSerializerMap.Add(typeof(System.Decimal), new CStringValueSerializer());
+   //         m_htSerializerMap.Add(typeof(decimal?), new CStringValueSerializer());
 
-            m_htDeserializerMap.Add(typeof(System.Decimal), new CDecimalDeserializer());
+   //         m_htDeserializerMap.Add(typeof(decimal?), new CDecimalDeserializer());
+			//m_htSerializerMap.Add(typeof(decimal), new CStringValueSerializer());
+
+			//m_htDeserializerMap.Add(typeof(decimal), new CDecimalDeserializer());
 
 			foreach (var pair in UserDeserializerMap)
 			{
@@ -202,6 +207,10 @@ namespace hessiancsharp.io
 		public AbstractSerializer GetSerializer(Type type)
 		{
             object val;
+			if (type == typeof(decimal?) || type == typeof(decimal))
+			{
+				int a = 10;
+			}
 			AbstractSerializer abstractSerializer = null;
             if (!m_htSerializerMap.TryGetValue(type, out val))
             {
@@ -211,7 +220,11 @@ namespace hessiancsharp.io
                 {
                     abstractSerializer = new CMapSerializer();
                 }
-                else if (typeof(IList).IsAssignableFrom(type))
+                else if (type.IsArray)
+                {
+	                abstractSerializer = new CArraySerializer();
+                }
+				else if (typeof(IList).IsAssignableFrom(type))
                 {
                     abstractSerializer = new CCollectionSerializer();
                 }
@@ -223,10 +236,7 @@ namespace hessiancsharp.io
                 {
                     abstractSerializer = new CExceptionSerializer();
                 }
-                else if (type.IsArray)
-                {
-                    abstractSerializer = new CArraySerializer();
-                }
+
                 else if (type.IsEnum)
                 {
                     abstractSerializer = new CEnumSerializer();
@@ -357,8 +367,6 @@ namespace hessiancsharp.io
 				#else
 				
 				// do other stuff
-				try 
-				{
 					//Diese Typsuche funzt bei Mobileloesung nicht:
 					//Es wurde ein andere Suche implementiert
 					Assembly[] ass = AppDomain.CurrentDomain.GetAssemblies();
@@ -373,11 +381,6 @@ namespace hessiancsharp.io
 					}
 					if(t != null)
 						abstractDeserializer = GetDeserializer(t);
-															
-				} 
-				catch (Exception) 
-				{
-				}
 			#endif
 				
 			}

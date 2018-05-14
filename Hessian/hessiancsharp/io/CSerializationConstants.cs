@@ -67,7 +67,9 @@ namespace hessiancsharp.io
 		public const int CHARACTER_ARRAY = DOUBLE_ARRAY + 1;
 		public const int STRING_ARRAY = CHARACTER_ARRAY + 1;
 		public const int OBJECT_ARRAY = STRING_ARRAY + 1;
-		
+		public const int DECIMAL = OBJECT_ARRAY + 1;
+		public const int NULL_DECIMAL = DECIMAL + 1;
+
 
 		#endregion
 	}

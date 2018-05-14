@@ -175,6 +175,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="hessiancsharp\io\CDecimalDeserializer.cs" />
+    <Compile Include="hessiancsharp\io\CDecimalSerializer.cs" />
     <Compile Include="hessiancsharp\io\CExceptionDeserializer.cs" />
     <Compile Include="hessiancsharp\io\CExceptionSerializer.cs" />
     <Compile Include="hessiancsharp\io\CHessianInput.cs">

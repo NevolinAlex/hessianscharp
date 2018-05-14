@@ -77,7 +77,7 @@ namespace hessiancsharp.io
 					{
 						//if ((properties[i].Attributes & PropertyAttributes.NotSerialized) == 0)
 						if (!Attribute.IsDefined(properties[i], typeof(XmlIgnoreAttribute)))
-						    if (!this.m_alProperties.Contains(properties[i])) 
+							if (!this.m_alProperties.Contains(properties[i])) 
 						    {
 							    this.m_alProperties.Add(properties[i]);
 						    }

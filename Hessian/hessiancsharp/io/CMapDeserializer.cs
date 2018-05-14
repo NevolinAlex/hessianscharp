@@ -34,9 +34,12 @@
 */
 
 #region NAMESPACES
+
 using System;
-using System.Collections; using System.Collections.Generic;
+using System.Collections;
+using System.Collections.Generic;
 using System.Threading;
+
 #endregion
 
 namespace hessiancsharp.io
@@ -44,16 +47,19 @@ namespace hessiancsharp.io
 	/// <summary>
 	/// Deserializing of Maps
 	/// </summary>
-	public class CMapDeserializer : AbstractDeserializer 
+	public class CMapDeserializer : AbstractDeserializer
 	{
 		#region CLASS_FIELDS
+
 		/// <summary>
 		/// Type of map
 		/// </summary>
 		private Type m_type = null;
+
 		#endregion
-  
+
 		#region CONSTRUCTORS
+
 		/// <summary>
 		/// Constructor
 		/// </summary>
@@ -62,9 +68,11 @@ namespace hessiancsharp.io
 		{
 			this.m_type = type;
 		}
+
 		#endregion
-  
+
 		#region PUBLIC_METHODS
+
 		/// <summary>
 		/// Reads map from input
 		/// </summary>
@@ -73,31 +81,30 @@ namespace hessiancsharp.io
 		public override object ReadMap(AbstractHessianInput abstractHessianInput)
 		{
 			IDictionary dictionary = null;
-            if ((m_type == null) || (m_type.IsInterface && typeof(IDictionary).IsAssignableFrom(m_type)))
+			if ((m_type == null) || (m_type.IsInterface && typeof(IDictionary).IsAssignableFrom(m_type)))
 				dictionary = new Dictionary<Object, Object>();
 			else if (m_type.Equals(typeof(Dictionary<Object, Object>)))
 				dictionary = new Dictionary<Object, Object>();
-			else 
+			else
 			{
 				//dictionary = (IDictionary)Activator.CreateInstance(m_type);
-                dictionary = new Dictionary<Object, Object>();
-				
+				dictionary = new Dictionary<Object, Object>();
 			}
 			abstractHessianInput.AddRef(dictionary);
-			while (! abstractHessianInput.IsEnd())
+			while (!abstractHessianInput.IsEnd())
 			{
 				Object key = abstractHessianInput.ReadObject();
 				Object value = abstractHessianInput.ReadObject();
-				if (!dictionary.Contains(key)) 
+				if (!dictionary.Contains(key))
 				{
 					dictionary.Add(key, value);
 				}
 			}
-			
+
 			abstractHessianInput.ReadEnd();
 			return dictionary;
 		}
-		
+
 		/// <summary>
 		/// Reads map from input 
 		/// </summary>
@@ -107,7 +114,7 @@ namespace hessiancsharp.io
 		{
 			//Read map start
 			int code = abstractHessianInput.ReadMapStart();
-			switch (code) 
+			switch (code)
 			{
 				case CHessianInput.PROT_NULL:
 					return null;
@@ -121,5 +128,4 @@ namespace hessiancsharp.io
 
 		#endregion
 	}
-
 }

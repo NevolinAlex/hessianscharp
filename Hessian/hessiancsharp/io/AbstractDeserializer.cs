@@ -34,23 +34,27 @@
 */
 
 #region NAMESPACES
+
 using System;
+
 #endregion
 
-namespace hessiancsharp.io 
+namespace hessiancsharp.io
 {
 	/// <summary>
 	/// Deserializing an object.
 	/// </summary>
-	public abstract class AbstractDeserializer : CSerializationConstants {
+	public abstract class AbstractDeserializer : CSerializationConstants
+	{
 		#region PUBLIC_METHODS
+
 		/// <summary>
 		/// Reads object
 		/// </summary>
 		/// <param name="abstractHessianInput">HessianInput-Instance</param>
 		/// <returns>Object that was read</returns>
 		/// <exception cref="CHessianException"/>
-		public virtual object ReadObject(AbstractHessianInput abstractHessianInput) 
+		public virtual object ReadObject(AbstractHessianInput abstractHessianInput)
 		{
 			throw new CHessianException(this.GetType().ToString());
 		}
@@ -86,7 +90,6 @@ namespace hessiancsharp.io
 			throw new CHessianException(this.GetType().ToString());
 		}
 
-		
 		#endregion
 	}
 }
